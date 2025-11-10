@@ -1,0 +1,44 @@
+{
+  "family": "mutant-api-task",
+  "executionRoleArn": "arn:aws:iam::337112169030:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "mutant-api",
+      "image": "337112169030.dkr.ecr.us-east-1.amazonaws.com/mutant-api-v2:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_DATASOURCE_URL",
+          "value": "jdbc:mysql://mutantdb.cehowsggm7jv.us-east-1.rds.amazonaws.com:3306/mutantdb"
+        },
+        {
+          "name": "SPRING_DATASOURCE_USERNAME",
+          "value": "admin"
+        },
+        {
+          "name": "SPRING_DATASOURCE_PASSWORD",
+          "value": "Ig16_082025.."
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mutant-api",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "essential": true
+    }
+  ]
+}

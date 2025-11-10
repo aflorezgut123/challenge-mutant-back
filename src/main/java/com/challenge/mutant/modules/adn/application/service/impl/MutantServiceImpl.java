@@ -1,11 +1,14 @@
 package com.challenge.mutant.modules.adn.application.service.impl;
 
 import com.challenge.mutant.modules.adn.application.service.MutantService;
+import com.challenge.mutant.modules.stats.application.service.StatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+
+import static com.challenge.mutant.core.utils.DnaUtils.toJson;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +16,7 @@ import java.util.Set;
 public class MutantServiceImpl implements MutantService {
 
     private static final Set<Character> VALID_NUCLEOTIDES = Set.of('A', 'T', 'C', 'G');
+    private final StatsService statsService;
 
     public boolean isMutant(String[] dna) {
         int rows = dna.length;
@@ -78,11 +82,12 @@ public class MutantServiceImpl implements MutantService {
                 }
 
                 if (sequencesFound >= 2) {
+                    statsService.saveStats(toJson(dna), true);
                     return true;
                 }
             }
         }
-
+        statsService.saveStats(toJson(dna), false);
         return false;
     }
 }
